@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="Transas iSailor">
+    <rte>
+      <name>16.7.2016 23.05 Route</name>
+      <rtept lat="60.180602841" lon="19.329841147">
+      </rtept>
+      <rtept lat="60.179977025" lon="19.475274489">
+      </rtept>
+      <rtept lat="60.234762636" lon="19.463867953">
+      </rtept>
+      <rtept lat="60.270099885" lon="19.456576038">
+      </rtept>
+      <rtept lat="60.273706924" lon="19.495274701">
+      </rtept>
+      <rtept lat="60.368871994" lon="19.526233631">
+      </rtept>
+      <rtept lat="60.384280966" lon="19.618328089">
+      </rtept>
+      <rtept lat="60.458797829" lon="19.651499270">
+      </rtept>
+      <rtept lat="60.465339181" lon="19.755877920">
+      </rtept>
+      <rtept lat="60.442625247" lon="19.772871985">
+      </rtept>
+      <rtept lat="60.437430368" lon="19.856795407">
+      </rtept>
+    </rte>
+  </gpx>
