@@ -52,9 +52,15 @@ module.exports = function (app) {
 
   plugin.signalKApiRoutes = router => {
     router.get('/resources/routes', (req, res) => {
-      res.json(
-        readGpxDirectory(path.join(__dirname, 'samples/routes'), app.selfId)
+      const features = readGpxDirectory(
+        path.join(__dirname, 'samples/routes'),
+        app.selfId
       )
+      for (var id in features) {
+        const feature = features[id]
+        feature.properties.type = 'route'
+      }
+      res.json(features)
     })
 
     router.get('/resources/tracks', (req, res) => {
@@ -64,6 +70,7 @@ module.exports = function (app) {
       )
       for (var id in features) {
         const feature = features[id]
+        feature.properties.type = 'track'
         const coordTimes = get(feature, 'properties.coordTimes')
         const coordinates = get(feature, 'geometry.coordinates')
         if (
