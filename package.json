@@ -1,6 +1,6 @@
 {
   "name": "@signalk/simple-gpx",
-  "version": "0.0.1",
+  "version": "0.0.2-0",
   "description": "Signal K Node Server Plugin to incorporate gis data from GPX files into the SK API",
   "main": "index.js",
   "keywords": [
