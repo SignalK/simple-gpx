@@ -94,9 +94,16 @@ module.exports = function (app) {
     router.get('/resources/locations', (req, res) => {
       res.json(
         readGpxDirectories(
-          ['samples/waypoints', 'samples/points_of_interest'].map(d =>
-            path.join(__dirname, d),
-          ),
+          [
+            {
+              dir: 'samples/waypoints',
+              type: 'waypoint'
+            },
+            {
+              dir: 'samples/points_of_interest',
+              type: 'pointofinterest'
+            }
+          ].map(({ dir, type }) => ({ dir: path.join(__dirname, dir), type })),
           app.selfId
         )
       )
@@ -107,10 +114,13 @@ module.exports = function (app) {
 
   return plugin
 
-  function readGpxDirectories (dirs, uuidNamespace) {
-    return dirs.reduce((acc, dir) => {
-      const features = readGpxDirectory(dir, uuidNamespace)
-      Object.keys(features).forEach(key => acc[key] = features[key])
+  function readGpxDirectories (dirSpecs, uuidNamespace) {
+    return dirSpecs.reduce((acc, dirSpec) => {
+      const features = readGpxDirectory(dirSpec.dir, uuidNamespace)
+      Object.keys(features).forEach(key => {
+        acc[key] = features[key]
+        acc[key].properties.type = dirSpec.type
+      })
       return acc
     }, {})
   }
