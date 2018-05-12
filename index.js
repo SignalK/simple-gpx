@@ -52,16 +52,25 @@ module.exports = function (app) {
 
   plugin.signalKApiRoutes = router => {
     router.get('/resources/routes', (req, res) => {
-      res.json(readGpxDirectory(path.join(__dirname, 'samples/routes'), app.selfId))
+      res.json(
+        readGpxDirectory(path.join(__dirname, 'samples/routes'), app.selfId)
+      )
     })
 
     router.get('/resources/tracks', (req, res) => {
-      const features = readGpxDirectory(path.join(__dirname, 'samples/tracks'), app.selfId)
+      const features = readGpxDirectory(
+        path.join(__dirname, 'samples/tracks'),
+        app.selfId
+      )
       for (var id in features) {
         const feature = features[id]
         const coordTimes = get(feature, 'properties.coordTimes')
         const coordinates = get(feature, 'geometry.coordinates')
-        if (get(feature, 'geometry.type') === 'MultiLineString' && coordTimes && coordinates) {
+        if (
+          get(feature, 'geometry.type') === 'MultiLineString' &&
+          coordTimes &&
+          coordinates
+        ) {
           if (coordTimes.length === coordinates.length) {
             coordTimes.forEach((timesArray, i) => {
               timesArray.forEach((time, j) => {
@@ -77,13 +86,34 @@ module.exports = function (app) {
     })
 
     router.get('/resources/waypoints', (req, res) => {
-      res.json(readGpxDirectory(path.join(__dirname, 'samples/waypoints'), app.selfId))
+      res.json(
+        readGpxDirectory(path.join(__dirname, 'samples/waypoints'), app.selfId)
+      )
+    })
+
+    router.get('/resources/locations', (req, res) => {
+      res.json(
+        readGpxDirectories(
+          ['samples/waypoints', 'samples/points_of_interest'].map(d =>
+            path.join(__dirname, d),
+          ),
+          app.selfId
+        )
+      )
     })
 
     return router
   }
 
   return plugin
+
+  function readGpxDirectories (dirs, uuidNamespace) {
+    return dirs.reduce((acc, dir) => {
+      const features = readGpxDirectory(dir, uuidNamespace)
+      Object.keys(features).forEach(key => acc[key] = features[key])
+      return acc
+    }, {})
+  }
 
   function readGpxDirectory (dir, uuidNamespace) {
     return fs.readdirSync(dir).reduce((acc, filename) => {
@@ -93,7 +123,10 @@ module.exports = function (app) {
             fs.readFileSync(path.join(dir, filename), 'utf8')
           )
         )
-        if (geojson.type === 'FeatureCollection' && Array.isArray(geojson.features)) {
+        if (
+          geojson.type === 'FeatureCollection' &&
+          Array.isArray(geojson.features)
+        ) {
           geojson.features.forEach((feature, i) => {
             acc[uuidv3(filename + i, uuidNamespace)] = feature
           })

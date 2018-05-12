@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="Transas iSailor">
+    <wpt lat="59.609288869" lon="24.708567494">
+      <name>Tallinn approach</name>
+      <geoidheight>0</geoidheight>
+      <type>Symbol</type>
+      <sym>Waypoint</sym>
+      <time>2018-05-12T10:37:34.259Z</time>
+    </wpt>
+    <wpt lat="59.949090166" lon="24.920298979">
+      <name>Helsinki Lighthouse West</name>
+      <geoidheight>0</geoidheight>
+      <type>Symbol</type>
+      <sym>Waypoint</sym>
+      <time>2018-05-12T10:38:35.867Z</time>
+    </wpt>
+  </gpx>
