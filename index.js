@@ -75,7 +75,7 @@ module.exports = function (app) {
             coordTimes.forEach((timesArray, i) => {
               timesArray.forEach((time, j) => {
                 coordinates[i][j].push(0)
-                coordinates[i][j].push(time)
+                coordinates[i][j].push(new Date(time).getTime())
               })
             })
             delete feature.properties.coordTimes
