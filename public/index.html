@@ -36,37 +36,53 @@
 
     var mymap = L.map('mapid').setView([60, 21], 6);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    const oStreetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
       id: 'openstreetmap'
-    }).addTo(mymap);
+    })
+    oStreetMap.addTo(mymap);
 
-    L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png', {
+    const oSeaMap = L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png', {
       attribution: 'Map data: &copy; <a href="http://www.openseamap.org">OpenSeaMap</a> contributors',
       id: 'openseamap'
-    }).addTo(mymap);
+    })
+    oSeaMap.addTo(mymap);
 
-    var geojsonLayers = []
+    const geojsonLayers = []
+    const apiPaths = ['/signalk/v1/api/resources/routes',
+      '/signalk/v1/api/resources/tracks',
+      '/signalk/v1/api/resources/locations']
+    const layerGroups = apiPaths.map(_ => L.layerGroup())
     Promise.all(
-      ['/signalk/v1/api/resources/routes',
-        '/signalk/v1/api/resources/tracks',
-        '/signalk/v1/api/resources/locations'].map(url => fetch(url, {
-          credentials: 'same-origin'
-        }).then(res => res.json()))).then(responses => responses.forEach(response => {
-          Object.keys(response).forEach(key => {
-            geojsonLayers.push(L.geoJSON(response[key]))
-          })
-        })).then(_ => {
-          mymap.fitBounds(
-            geojsonLayers.reduce((bounds, layer) => {
-              if (!bounds) {
-                return layer.getBounds()
-              } else {
-                return bounds.extend(layer.getBounds())
-              }
-            }, undefined))
-          geojsonLayers.forEach(layer => layer.addTo(mymap))
+      apiPaths.map(url => fetch(url, {
+        credentials: 'same-origin'
+      }).then(res => res.json()))).then(responses => responses.forEach((response, i) => {
+        Object.keys(response).forEach(key => {
+          const layer = L.geoJSON(response[key])
+          layerGroups[i].addLayer(layer)
+          geojsonLayers.push(layer)
         })
+      })).then(_ => {
+        mymap.fitBounds(
+          geojsonLayers.reduce((bounds, layer) => {
+            if (!bounds) {
+              return layer.getBounds()
+            } else {
+              return bounds.extend(layer.getBounds())
+            }
+          }, undefined))
+        layerGroups.forEach(lg => lg.addTo(mymap))
+        L.control.layers(
+          {
+            'OpenStreetMap': oStreetMap
+          },
+          {
+            'OpenSeaMap': oSeaMap,
+            'Routes': layerGroups[0],
+            'Tracks': layerGroups[1],
+            'Locations': layerGroups[2]
+          }).addTo(mymap)
+      })
   </script>
 
 
